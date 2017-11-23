@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'cgi'
 
-require 'fluent/plugin/filter'
+require 'fluent/plugin/filter_filter'
 
 module Fluent
   class URLDecodeFilter < Filter
