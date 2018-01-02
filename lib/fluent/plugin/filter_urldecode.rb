@@ -19,7 +19,7 @@ module Fluent
 
     def filter(tag, time, record)
       @fields.each { |key|
-        record[key] = CGI.unescape(record[key]) if record.has_key? key
+        record[key] = CGI.unescape(record[key]) if (record.has_key?(key)) && (!record[key].nil?)
       }
       record
     end
