@@ -7,7 +7,7 @@ class URLDecodeFilterTest < Test::Unit::TestCase
   end
 
   CONFIG = %[
-    fields field1,field2
+    fields field1,field2,field4
   ]
 
   def create_driver(conf=CONFIG)
@@ -23,19 +23,24 @@ class URLDecodeFilterTest < Test::Unit::TestCase
 
   test 'configure' do
     d = create_driver(CONFIG)
-    assert_equal ['field1', 'field2'], d.instance.fields
+    assert_equal ['field1', 'field2', 'field4'], d.instance.fields
   end
 
   test 'decode' do
     es = emit(CONFIG, {
                 'field1' => "1%202%203",
-                'field3' => "1%202%203"
+                'field3' => "1%202%203",
+                'field4' => nil
               })
 
     es.each { |time, record|
-      assert_equal '1 2 3', record['field1']
-      assert_equal '1%202%203', record['field3']
-      assert_equal false, record.has_key?('field2')
+      # keys should exist
+      assert_equal record['field1'], '1 2 3'
+      assert_equal record['field3'], '1%202%203'
+      assert_equal record['field4'], nil
+
+      # keys should not exist
+      assert_equal record.has_key?('field2'), false
     }
   end
 
